@@ -27,10 +27,18 @@ function App() {
     const [description, setDescription] = useState('')
     const addNewPost = (e) => {
         e.preventDefault()
-        console.log(title)
-        console.log(bodyInputRef.current.value)
+        const newPost = {
+            id: Date.now(),
+            title,
+            description
+
+        }
+        setPosts([...posts, newPost])
+        setTitle('')
+        setDescription('')
+
     }
-    const bodyInputRef = useRef()
+
     return (
         <div className="App">
             <Counter/>
@@ -44,7 +52,8 @@ function App() {
 
                 <MyInput type="text"
                          placeholder="Post description"
-                         ref={bodyInputRef}
+                         value={description}
+                         onChange={e => setDescription(e.target.value)}
                 />
                 <MyButton onClick={addNewPost}>Create post</MyButton>
 
