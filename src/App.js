@@ -17,25 +17,24 @@ function App() {
         {id: 4, title: 'Javascript', description: 'Javascript - programming language!!!'},
         {id: 5, title: 'Javascript', description: 'Javascript - programming language!!!!'},
     ])
-    const [posts2, setPosts2] = useState([
-        {id: 1, title: 'Python', description: 'Python - programming language.'},
-        {id: 2, title: 'Python', description: 'Python - programming language!'},
-        {id: 3, title: 'Python', description: 'Python - programming language!!'},
-        {id: 4, title: 'Python', description: 'Python - programming language!!!'},
-        {id: 5, title: 'Python', description: 'Python - programming language!!!!'},
-    ])
+
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
     }
-
+    const removePost = (post) => {
+        setPosts(posts.filter(p => p.id !== post.id))
+    }
 
     return (
         <div className="App">
             <Counter/>
             <ClassCounter/>
             <PostForm create={createPost}/>
-            <PostList posts={posts} title="List of articles"/>
-            <PostList posts={posts2} title="List of articles about Python"/>
+            {posts.length ?
+                <PostList posts={posts} removePost={removePost} title="List of articles"/>
+                : <h1 style={{textAlign: 'center'}}>No records yet</h1>
+            }
+
 
         </div>
     );
