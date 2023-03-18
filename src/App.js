@@ -8,6 +8,7 @@ import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/Select/MySelect";
+import {logDOM} from "@testing-library/react";
 
 
 function App() {
@@ -31,11 +32,21 @@ function App() {
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
     }
-    const [selected, setSelectedSort] = useState('')
+    const [selectedSort, setSelectedSort] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
 
+    function getSortedPosts() {
+        if (selectedSort) {
+
+            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+        }
+        return posts
+    }
+
+    const sortedPosts = getSortedPosts()
     const sortPost = (sort) => {
         setSelectedSort(sort);
-        setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
+
 
     }
     return (<div className="App">
@@ -43,8 +54,15 @@ function App() {
         <ClassCounter/>
 
         <PostForm create={createPost}/>
+        <MyInput
+            value={searchQuery}
+            onChange={e => {
+                setSearchQuery(e.target.value)
+            }}
+            placeholder="Search"
+        />
         <MySelect
-            value={setSelectedSort}
+            value={selectedSort}
             onChange={sortPost}
             defaultValue={'Sort by'}
             options={[
@@ -52,7 +70,7 @@ function App() {
                 {value: 'description', name: 'By description'}
             ]}
         />
-        {posts.length ? <PostList posts={posts} removePost={removePost} title="List of articles"/> :
+        {posts.length ? <PostList posts={sortedPosts} removePost={removePost} title="List of articles"/> :
             <h1 style={{textAlign: 'center'}}>No records yet</h1>}
 
 
