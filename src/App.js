@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import PostItem from "./components/PostItem";
@@ -35,20 +35,26 @@ function App() {
     const [selectedSort, setSelectedSort] = useState('')
     const [searchQuery, setSearchQuery] = useState('')
 
-    function getSortedPosts() {
-        if (selectedSort) {
 
-            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
-        }
-        return posts
-    }
+    const sortedPosts = useMemo(() => {
+            if (selectedSort) {
+                return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+            }
+            return posts
+        },
+        [selectedSort, posts])
 
-    const sortedPosts = getSortedPosts()
+    const sortedAndSearchedPosts = useMemo(() => {
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase()))
+    }, [searchQuery, sortedPosts])
+
+
     const sortPost = (sort) => {
         setSelectedSort(sort);
 
 
     }
+
     return (<div className="App">
         <Counter/>
         <ClassCounter/>
@@ -70,7 +76,8 @@ function App() {
                 {value: 'description', name: 'By description'}
             ]}
         />
-        {posts.length ? <PostList posts={sortedPosts} removePost={removePost} title="List of articles"/> :
+        {sortedAndSearchedPosts.length ?
+            <PostList posts={sortedAndSearchedPosts} removePost={removePost} title="List of articles"/> :
             <h1 style={{textAlign: 'center'}}>No records yet</h1>}
 
 
