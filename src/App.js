@@ -10,32 +10,34 @@ import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/Select/MySelect";
 import {logDOM} from "@testing-library/react";
 import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
 
 
 function App() {
-    const [posts, setPosts] = useState([{
-        id: 1,
-        title: 'Javascript',
-        description: 'Favascript - programming language.'
-    }, {id: 2, title: 'Favascript', description: 'Javascript - programming language!'}, {
-        id: 3,
-        title: 'Javascript',
-        description: 'script - programming language!!'
-    }, {id: 4, title: 'ript', description: 'Javascript - programming language!!!'}, {
-        id: 5,
-        title: 'Mavascript',
-        description: 'ipt - programming language!!!!'
-    },])
-
+    const [posts, setPosts] = useState(
+        [
+            {
+                id: 1,
+                title: 'Javascript',
+                description: 'Favascript - programming language.'
+            }, {id: 2, title: 'Favascript', description: 'Javascript - programming language!'}, {
+            id: 3,
+            title: 'Javascript',
+            description: 'script - programming language!!'
+        }, {id: 4, title: 'ript', description: 'Javascript - programming language!!!'}, {
+            id: 5,
+            title: 'Mavascript',
+            description: 'ipt - programming language!!!!'
+        },
+        ])
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
+        setModal(false)
     }
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
     }
     const [filter, setFilter] = useState({sort: '', query: ''})
-
-
     const sortedPosts = useMemo(() => {
             if (filter.sort) {
                 return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
@@ -43,17 +45,21 @@ function App() {
             return posts
         },
         [filter.sort, posts])
-
     const sortedAndSearchedPosts = useMemo(() => {
         return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
     }, [filter.query, sortedPosts])
-
+    const [modal, setModal] = useState(false)
 
     return (<div className="App">
+        <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
+            Создать пост
+        </MyButton>
+        <MyModal visible={modal} setVisible={setModal}>
+            <PostForm create={createPost}/>
+        </MyModal>
         <Counter/>
         <ClassCounter/>
 
-        <PostForm create={createPost}/>
         <PostFilter filter={filter} setFilter={setFilter}/>
         <PostList posts={sortedAndSearchedPosts} removePost={removePost} title="List of articles"/>
 
