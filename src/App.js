@@ -11,6 +11,7 @@ import MySelect from "./components/UI/Select/MySelect";
 import {logDOM} from "@testing-library/react";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
+import {usePosts} from "./hooks/usePosts";
 
 
 function App() {
@@ -38,16 +39,7 @@ function App() {
         setPosts(posts.filter(p => p.id !== post.id))
     }
     const [filter, setFilter] = useState({sort: '', query: ''})
-    const sortedPosts = useMemo(() => {
-            if (filter.sort) {
-                return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
-            }
-            return posts
-        },
-        [filter.sort, posts])
-    const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
-    }, [filter.query, sortedPosts])
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
     const [modal, setModal] = useState(false)
 
     return (<div className="App">
