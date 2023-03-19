@@ -15,26 +15,16 @@ import {usePosts} from "./hooks/usePosts";
 import axios from "axios";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 
 
 function App() {
-    const [posts, setPosts] = useState(
-        [])
+    const [posts, setPosts] = useState([])
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
     }
 
-    async function fetchPosts() {
-        setPostLoading(true)
-        const posts = await PostService.getAll()
-        setTimeout(async () => {
-            setPosts(posts)
-            setPostLoading(false)
-        }, 2000)
-
-
-    }
 
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
@@ -42,7 +32,10 @@ function App() {
     const [filter, setFilter] = useState({sort: '', query: ''})
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
     const [modal, setModal] = useState(false)
-    const [isPostLoading, setPostLoading] = useState(false)
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostService.getAll()
+        setPosts(posts)
+    })
     useEffect(() => {
         fetchPosts()
     }, [])
@@ -59,7 +52,10 @@ function App() {
         <ClassCounter/>
 
         <PostFilter filter={filter} setFilter={setFilter}/>
-        {isPostLoading
+        {postError &&
+        <h1>Seems that there is some error</h1>
+        }
+        {isPostsLoading
             ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><Loader></Loader></div>
             : <PostList posts={sortedAndSearchedPosts} removePost={removePost} title="List of articles"/>
         }
