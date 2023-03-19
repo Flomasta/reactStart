@@ -6,7 +6,6 @@ const Pagination = ({totalPages, page, changePage}) => {
     let pagesArray = getPagesArray(totalPages)
     let active_page = [cl.pagination__page, cl.pagination__active].join(' ')
     let page_class = cl.pagination__page
-    console.log(active_page)
     return (
 
         <div className={cl.pagination__wrapper}>
