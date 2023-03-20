@@ -11,9 +11,17 @@
   flex-direction: column;
 }
 
+h2 {
+  margin-top: 20px;
+}
+
 .App {
   width: 800px;
 
+}
+
+.container {
+  width: 800px;
 }
 
 .post {
@@ -23,6 +31,17 @@
   margin-top: 15px;
   justify-content: space-between;
   align-items: center;
+}
+
+.post__btns {
+  display: flex;
+  column-gap: 15px;
+  padding: 0 10px;
+}
+
+.post__btns a {
+  text-decoration: none;
+  color: teal;
 }
 
 .remove-btn {
@@ -49,7 +68,7 @@
 
 .navbar {
   height: 50px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 0 15px;
@@ -58,4 +77,11 @@
 
 .navbar__links {
   margin-left: auto;
+}
+
+.comments__wrapper {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
 }

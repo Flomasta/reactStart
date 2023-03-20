@@ -7,10 +7,12 @@ import AppRouter from "./components/AppRouter";
 function App() {
     return (
 
-        <BrowserRouter>
-            <Navbar/>
-            <AppRouter/>
-        </BrowserRouter>
+        <div className='container'>
+            <BrowserRouter>
+                <Navbar/>
+                <AppRouter/>
+            </BrowserRouter>
+        </div>
 
     );
 }
